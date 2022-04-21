@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 19 20:46:51 2022
-
-@author: fmangane
-
-"""
 import psycopg2 
 import psycopg2.extras
 
@@ -53,6 +46,7 @@ def search():
             print("La connexion PostgreSQL est fermée")
         if(choice==2):
             reg = input("choisissez une région")
+            reg = reg.upper()
             command = 'SELECT libelle_dep FROM departements NATURAL JOIN regions where libelle_reg = %s'
             try:
                 cur.execute(command,reg)
@@ -65,7 +59,7 @@ def search():
             rows = cur.fetchall() 
             if(not rows):
                 print("No result found")
-                print(rows)
+            print(rows)
             for r in rows:
                 print("libelle_dep = ", r['libelle_dep'])
                 print("libelle_reg = ", r['libelle_reg'])
@@ -75,7 +69,9 @@ def search():
             print("La connexion PostgreSQL est fermée")
         if(choice==3):
             dep = input("choisissez un département")
+            dep = dep.upper()
             tpe = input("choissez un thème entre : Social, EvolutionPop et Economie")
+            tpe = tpe.upper()
             command = 'SELECT libelle_indic, annee_dbt, annee_fin, opt_para, value FROM indicdep NATURAL JOIN indicnoms NATURAL JOIN Departements WHERE type = %s and libelle_dep = %s'
             try:
                 cur.execute(command,dep,tpe)
@@ -88,7 +84,7 @@ def search():
             rows = cur.fetchall() 
             if(not rows):
                 print("No result found")
-                print(rows)
+            print(rows)
             for r in rows:
                 print("libelle_indic = ", r['libelle_indic'])
                 print("annee_dbt = ", r['annee_dbt'])
@@ -101,8 +97,11 @@ def search():
             print("La connexion PostgreSQL est fermée")
         if(choice==4):
             dep = input("choisissez un département")
+            dep = dep.upper()
             annee = input("choissez une année")
+            annee = annee.upper()
             param = 'EStimation de la population (en millier)'
+            param = param.upper()
             command = 'SELECT libelle_dep, libelle_indic, annee_dbt, value FROM departements NATURAL JOIN indicdep NATURAL JOIN indicnoms WHERE libelle_indic = %s AND libelle_dep = %s AND annee_dbt = %s'
             try:
                 cur.execute(command,param,dep,annee)
@@ -115,7 +114,7 @@ def search():
             rows = cur.fetchall() 
             if(not rows):
                 print("Données non disponibles")
-                print(rows)
+            print(rows)
             for r in rows:
                 print("libelle_dep = ", r['libelle_dep'])
                 print("libelle_indic = ", r['libelle_indic'])
