@@ -1,0 +1,135 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Apr 19 20:46:51 2022
+
+@author: fmangane
+
+"""
+import psycopg2 
+import psycopg2.extras
+
+print("Connexion à la base de données...")
+USERNAME="fmangane"
+PASSWORD="Chocolator@99"
+try:
+    conn = psycopg2.connect(host="pgsql", dbname=USERNAME,user=USERNAME,
+password=PASSWORD)
+except Exception as e :
+    exit("Connexion impossible à la base de données: " + str(e))
+    
+print("Connecte à la base de donnees")
+cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+def search():
+        print("")
+        print("~~~~~~~~~~~~~~~~~~~~~")
+        print("Bienvenue sur le serveur")
+        print("Choisissez une option")
+        print("1-Afficher la liste des régions")
+        print("2-Afficher les départements d'une région choisie")
+        print("3-Afficher les données relatives à un département et un thème")
+        print("4-Afficher la population annuelle d'un département")
+        print("~~~~~~~~~~~~~~~~~~~~~")
+        choice=int(input("Que voulez vous faire ? "))
+        if(choice==1):
+            command = 'SELECT * FROM regions'
+            try:
+                cur.execute(command)
+            except Exception as e:
+                cur.close()
+                conn.commit()
+                conn.close()
+                exit("error when running: " + command + " : " + str(e))
+                print("La connexion PostgreSQL est précocement fermée")
+            rows = cur.fetchall() 
+            if(not rows):
+                print("No result found")
+            print(rows)
+            for r in rows:
+                print("id_reg = ", r['id_reg'])
+                print("libelle_reg = ", r['libelle_reg'])
+            cur.close()
+            conn.commit()
+            conn.close()
+            print("La connexion PostgreSQL est fermée")
+        if(choice==2):
+            reg = input("choisissez une région")
+            command = 'SELECT libelle_dep FROM departements NATURAL JOIN regions where libelle_reg = %s'
+            try:
+                cur.execute(command,reg)
+            except Exception as e:
+                cur.close()
+                conn.commit()
+                conn.close()
+                exit("error when running: " + command + " : " + str(e))
+                print("La connexion PostgreSQL est fermée")
+            rows = cur.fetchall() 
+            if(not rows):
+                print("No result found")
+                print(rows)
+            for r in rows:
+                print("libelle_dep = ", r['libelle_dep'])
+                print("libelle_reg = ", r['libelle_reg'])
+            cur.close()
+            conn.commit()
+            conn.close()
+            print("La connexion PostgreSQL est fermée")
+        if(choice==3):
+            dep = input("choisissez un département")
+            tpe = input("choissez un thème entre : Social, EvolutionPop et Economie")
+            command = 'SELECT libelle_indic, annee_dbt, annee_fin, opt_para, value FROM indicdep NATURAL JOIN indicnoms NATURAL JOIN Departements WHERE type = %s and libelle_dep = %s'
+            try:
+                cur.execute(command,dep,tpe)
+            except Exception as e:
+                cur.close()
+                conn.commit()
+                conn.close()
+                exit("error when running: " + command + " : " + str(e))
+                print("La connexion PostgreSQL est fermée")
+            rows = cur.fetchall() 
+            if(not rows):
+                print("No result found")
+                print(rows)
+            for r in rows:
+                print("libelle_indic = ", r['libelle_indic'])
+                print("annee_dbt = ", r['annee_dbt'])
+                print("annee_fin = ", r['annee_fin'])
+                print("opt_para = ", r['opt_para'])
+                print("value = ", r['value'])
+            cur.close()
+            conn.commit()
+            conn.close()
+            print("La connexion PostgreSQL est fermée")
+        if(choice==4):
+            dep = input("choisissez un département")
+            annee = input("choissez une année")
+            param = 'EStimation de la population (en millier)'
+            command = 'SELECT libelle_dep, libelle_indic, annee_dbt, value FROM departements NATURAL JOIN indicdep NATURAL JOIN indicnoms WHERE libelle_indic = %s AND libelle_dep = %s AND annee_dbt = %s'
+            try:
+                cur.execute(command,param,dep,annee)
+            except Exception as e:
+                cur.close()
+                conn.commit()
+                conn.close()
+                exit("error when running: " + command + " : " + str(e))
+                print("La connexion PostgreSQL est fermée")
+            rows = cur.fetchall() 
+            if(not rows):
+                print("Données non disponibles")
+                print(rows)
+            for r in rows:
+                print("libelle_dep = ", r['libelle_dep'])
+                print("libelle_indic = ", r['libelle_indic'])
+                print("annee_dbt = ", r['annee_dbt'])
+                print("value = ", r['value'])     
+            cur.close()
+            conn.commit()
+            conn.close()
+            print("La connexion PostgreSQL est fermée")
+        if choice not in [1,2,3,4]:
+            cur.close()
+            conn.commit()
+            conn.close()
+            print("Erreur, option non disponible. La connexion PostgreSQL est fermée")
+        
+
+search()
