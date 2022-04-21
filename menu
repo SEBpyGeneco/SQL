@@ -47,7 +47,7 @@ def search():
         if(choice==2):
             reg = input("choisissez une région")
             reg = reg.upper()
-            command = 'SELECT libelle_dep FROM departements NATURAL JOIN regions where libelle_reg = %s'
+            command = 'SELECT libelle_dep FROM departements NATURAL JOIN regions where UPPER(libelle_reg) = %s'
             try:
                 cur.execute(command,reg)
             except Exception as e:
@@ -72,7 +72,7 @@ def search():
             dep = dep.upper()
             tpe = input("choissez un thème entre : Social, EvolutionPop et Economie")
             tpe = tpe.upper()
-            command = 'SELECT libelle_indic, annee_dbt, annee_fin, opt_para, value FROM indicdep NATURAL JOIN indicnoms NATURAL JOIN Departements WHERE type = %s and libelle_dep = %s'
+            command = 'SELECT libelle_indic, annee_dbt, annee_fin, opt_para, value FROM indicdep NATURAL JOIN indicnoms NATURAL JOIN Departements WHERE UPPER(type) = %s and UPPER(libelle_dep) = %s'
             try:
                 cur.execute(command,dep,tpe)
             except Exception as e:
@@ -99,10 +99,9 @@ def search():
             dep = input("choisissez un département")
             dep = dep.upper()
             annee = input("choissez une année")
-            annee = annee.upper()
             param = 'EStimation de la population (en millier)'
             param = param.upper()
-            command = 'SELECT libelle_dep, libelle_indic, annee_dbt, value FROM departements NATURAL JOIN indicdep NATURAL JOIN indicnoms WHERE libelle_indic = %s AND libelle_dep = %s AND annee_dbt = %s'
+            command = 'SELECT libelle_dep, libelle_indic, annee_dbt, value FROM departements NATURAL JOIN indicdep NATURAL JOIN indicnoms WHERE UPPER(libelle_indic) = %s AND UPPER(libelle_dep) = %s AND annee_dbt = %s'
             try:
                 cur.execute(command,param,dep,annee)
             except Exception as e:
