@@ -1,0 +1,1 @@
+SELECT value from indicreg NATURAL JOIN departements NATURAL JOIN indicnoms WHERE libelle_indic = 'Taux d’activité (%)' and libelle_dep in (SELECT libelle_dep from Departements NATURAL JOIN indicreg NATURAL JOIN indicnoms WHERE annee_dbt = '2014' and libelle_indic = 'Effort de recherche et développement (%)' and value > 2);
