@@ -199,9 +199,8 @@ def createIndN(indics,type,compteur=0):
 print("Connexion à la base de donnees...")
 USERNAME="admin"
 PASSWORD="admin"
-DBN="finl"
 try:
-    conn = psycopg2.connect(host="localhost", dbname=DBN,user=USERNAME,password=PASSWORD)
+    conn = psycopg2.connect(host="pgsql", dbname=USERNAME,user=USERNAME,password=PASSWORD)
 except Exception as e :
     exit("Connexion impossible à la base de donnees..." + str(e))
 print("Connecté à la base de donnees...")
