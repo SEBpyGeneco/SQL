@@ -4,7 +4,7 @@ MANGANE Fatoumata  et RICHARD Sébastien
 Script python pour affichage d'un menu permettant d'intéragir avec la base de données.
 '''
 
-############### 
+
 # IMPORTATION #
 ############### 
 
